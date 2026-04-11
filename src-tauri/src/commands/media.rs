@@ -28,7 +28,7 @@ pub fn get_duration(file_path: &str) -> Result<i64, String> {
     let mut cmd = Command::new(&ffprobe_path);
     cmd.args([
         "-v",
-        "quiet",
+        "error",
         "-show_entries",
         "format=duration",
         "-of",
@@ -238,7 +238,7 @@ pub fn get_video_dimensions(file_path: &str) -> Result<serde_json::Value, String
     let mut cmd = Command::new(&ffprobe_path);
     cmd.args([
         "-v",
-        "quiet",
+        "error",
         "-print_format",
         "json",
         "-show_streams",

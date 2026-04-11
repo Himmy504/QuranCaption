@@ -1,5 +1,8 @@
-﻿/// Configure la commande pour éviter l'ouverture d'une fenêtre console sur Windows.
+/// Configure la commande pour éviter l'ouverture d'une fenêtre console sur Windows.
 pub fn configure_command_no_window(cmd: &mut std::process::Command) {
+    // Disable stdin inheritance to prevent background processes like ffmpeg from hanging when they attempt to read input.
+    cmd.stdin(std::process::Stdio::null());
+
     #[cfg(target_os = "windows")]
     {
         use std::os::windows::process::CommandExt;
