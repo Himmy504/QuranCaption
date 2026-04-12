@@ -1,4 +1,4 @@
-﻿<script lang="ts">
+<script lang="ts">
 	import type { AssetClip } from '$lib/classes';
 	import Timeline from '$lib/components/projectEditor/timeline/Timeline.svelte';
 	import VideoPreview from '$lib/components/projectEditor/videoPreview/VideoPreview.svelte';
@@ -407,8 +407,17 @@
 	}
 
 	async function waitForRetryPause() {
-		await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
-		await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+		const rafOrTimeout = () => new Promise<void>(resolve => {
+			let handled = false;
+			const id = requestAnimationFrame(() => {
+				if (!handled) { handled = true; resolve(); }
+			});
+			setTimeout(() => {
+				if (!handled) { handled = true; cancelAnimationFrame(id); resolve(); }
+			}, 50);
+		});
+		await rafOrTimeout();
+		await rafOrTimeout();
 		await new Promise((resolve) => setTimeout(resolve, 300));
 	}
 
